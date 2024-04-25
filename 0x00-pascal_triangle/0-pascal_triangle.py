@@ -1,26 +1,25 @@
 #!/usr/bin/python3
 """
-0-pascal_triangle.py
+hey
 """
-
 
 def pascal_triangle(n):
     """
-    Creates pascale trinagle
+    Create a function that returns
+    a list of lists of integers
     """
     if n <= 0:
         return []
 
-    pascal_array = [[] for i in range(n)]
+    arr = [[1]]
 
-    for i in range(n):
-        if i == 0:
-            pascal_array[i].append(1)
-            continue
+    for i in range(1, n):
+        new_row = [1]
 
-        for j in range(i + 1):
-            up_left = pascal_array[i - 1][j - 1] if j != 0 else 0
-            up_right = pascal_array[i - 1][j] if j != i else 0
-            pascal_array[i].append(up_left + up_right)
+        for j in range(1, i):
+            new_row.append(arr[i-1][j-1] + arr[i-1][j])
 
-    return pascal_array
+        new_row.append(1)
+        arr.append(new_row)
+
+    return arr
