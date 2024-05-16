@@ -15,7 +15,7 @@ def process(line):
 
     lin = line.split()
     try:
-        status_code = lin[-2]
+        status_code = int(lin[-2])
         file_size = int(lin[-1])
 
         if status_code in scc:
@@ -28,7 +28,7 @@ def process(line):
 def print_f():
     print(f"File size: {tsize}")
     for status_code, count in sorted(scc.items()):
-        if count > 0:
+        if count != 0:
             print(f"{status_code}: {count}")
 
 
