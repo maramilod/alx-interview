@@ -26,11 +26,12 @@ def process(line):
 
 
 def print_f():
-    print(f"File size: {tsize}")
+    p = f"File size: {tsize}\n"
     for status_code, count in sorted(scc.items()):
         if count != 0:
-            print(f"{status_code}: {count}")
-
+            p += f"{status_code}: {count}\n"
+    sys.stdout.write(p)
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     try:
