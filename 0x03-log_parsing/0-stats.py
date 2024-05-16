@@ -1,47 +1,54 @@
 #!/usr/bin/python3
 """
-h
-e
-y
+0-stats.py
 """
 import sys
 
-tsize = 0
-scc = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+def formated_print(data):
+    ''' prints data in fromated way '''
+    out = "File size: {}\n".format(data['size'])
+    for key in data['codes']:
+        if data['codes'][key] != 0:
+            out += '{}: {}\n'.format(key, data['codes'][key])
+    sys.stdout.write(out)
+    sys.stdout.flush()
 
 
-def process(line):
-    global tsize
-
-    lin = line.split()
+def extract(data, line):
+    ''' check if the input is valid and extracts data from it '''
+    line = line.rsplit()
     try:
-        status_code = int(lin[-2])
-        file_size = int(lin[-1])
-
-        if status_code in scc:
-            scc[status_code] += 1
-            tsize += file_size
+        status = line[-2]
+        if status in data['codes']:
+            data['codes'][status] += 1
+        data['size'] += int(line[-1])
     except (IndexError, ValueError):
         pass
 
 
-def print_f():
-    p = f"File size: {tsize}\n"
-    for status_code, count in sorted(scc.items()):
-        if count != 0:
-            p += f"{status_code}: {count}\n"
-    sys.stdout.write(p)
-    sys.stdout.flush()
+def main(data):
+    ''' program entry level '''
+    i = 0
+    for line in sys.stdin:
+        extract(data, line)
+        i += 1
+        if i % 10 == 0:
+            formated_print(data)
+    formated_print(data)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
+    data = {
+        'size': 0, 'codes': {
+            '200': 0, '301': 0,
+            '400': 0, '401': 0, '403': 0,
+            '404': 0, '405': 0, '500': 0
+        }
+    }
+
     try:
-        i = 0
-        for line in sys.stdin:
-            process(line)
-            i += 1
-            if i % 10 == 0:
-                print_f()
-        print_f()
+        main(data)
     except KeyboardInterrupt:
-        print_f()
+        formated_print(data)
         raise
