@@ -1,54 +1,38 @@
 #!/usr/bin/python3
-"""
-0-stats.py
-"""
+'''a script that reads stdin line by line and computes metrics'''
+
+
 import sys
 
+cache = {'200': 0, '301': 0, '400': 0, '401': 0,
+         '403': 0, '404': 0, '405': 0, '500': 0}
+total_size = 0
+counter = 0
 
-def formated_print(data):
-    ''' prints data in fromated way '''
-    out = "File size: {}\n".format(data['size'])
-    for key in data['codes']:
-        if data['codes'][key] != 0:
-            out += '{}: {}\n'.format(key, data['codes'][key])
-    sys.stdout.write(out)
-    sys.stdout.flush()
-
-
-def extract(data, line):
-    ''' check if the input is valid and extracts data from it '''
-    line = line.rsplit()
-    try:
-        status = line[-2]
-        if status in data['codes']:
-            data['codes'][status] += 1
-        data['size'] += int(line[-1])
-    except (IndexError, ValueError):
-        pass
-
-
-def main(data):
-    ''' program entry level '''
-    i = 0
+try:
     for line in sys.stdin:
-        extract(data, line)
-        i += 1
-        if i % 10 == 0:
-            formated_print(data)
-    formated_print(data)
+        line_list = line.split(" ")
+        if len(line_list) > 4:
+            code = line_list[-2]
+            size = int(line_list[-1])
+            if code in cache.keys():
+                cache[code] += 1
+            total_size += size
+            counter += 1
 
+        if counter == 10:
+            counter = 0
+            print('File size: {}'.format(total_size))
+            for key, value in sorted(cache.items()):
+                if value != 0:
+                    print('{}: {}'.format(key, value))
 
-if __name__ == '__main__':
-    data = {
-        'size': 0, 'codes': {
-            '200': 0, '301': 0,
-            '400': 0, '401': 0, '403': 0,
-            '404': 0, '405': 0, '500': 0
-        }
-    }
+except Exception as err:
+    pass
 
-    try:
-        main(data)
-    except KeyboardInterrupt:
-        formated_print(data)
-        raise
+finally:
+    print('File size: {}'.format(total_size))
+    for key, value in sorted(cache.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
+
