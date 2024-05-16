@@ -9,12 +9,14 @@ import sys
 tsize = 0
 scc = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 
+
 def process(line):
     global tsize
-    l = line.split()
+
+    lin = line.split()
     try:
-        status_code = int(l[-2])
-        file_size = int(l[-1])
+        status_code = int(lin[-2])
+        file_size = int(lin[-1])
 
         if status_code in scc:
             scc[status_code] += 1
@@ -22,11 +24,13 @@ def process(line):
     except (IndexError, ValueError):
         pass
 
+
 def print_f():
-    print(f"Total file size: File size: {tsize}")
+    print(f"File size: {tsize}")
     for status_code, count in sorted(scc.items()):
         if count > 0:
             print(f"{status_code}: {count}")
+
 
 if __name__ == "__main__":
     try:
