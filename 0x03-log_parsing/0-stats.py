@@ -15,7 +15,7 @@ def process(line):
 
     lin = line.split()
     try:
-        status_code = int(lin[-2])
+        status_code = lin[-2]
         file_size = int(lin[-1])
 
         if status_code in scc:
