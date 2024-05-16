@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 h
 e
@@ -23,9 +23,9 @@ try:
 
         if len(sys.stdin.readlines()) % 10 == 0 or sys.stdin.tell() > 0:
             print("File size: {}".format(tsize))
-            for status, count in stored(status_counts.items()):
+            for status, count in sorted(status_counts.items()):
                 print("{}: {}".format(status, count))
 except KeyboardInterrupt:
     print("File size: {}".format(tsize))
-    for status, count in storeid(status_counts.items()):
+    for status, count in sorted(status_counts.items()):
         print("{}: {}".format(status, count))
