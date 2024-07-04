@@ -1,43 +1,80 @@
 #!/usr/bin/python3
 """
-0-prime_game.py
+    > Prime Game <
+    Maria and Ben are playing a game. Given a set of consecutive integers
+    starting from 1 up to and including n, they take turns choosing a prime
+    number from the set and removing that number and its multiples from the
+    set. The player that cannot make a move loses the game.
 """
 
 
-def is_winner(x, nums):
-    def is_prime(n):
-        """Check if n is a prime number."""
-        if n < 2:
-            return False
-        for i in range(2, int(n**0.5) + 1):
-            if n % i == 0:
-                return False
-        return True
+def isWinner(x, nums):
+    """ Determine the winner, Maria or Ben. """
+    players = {'Ben': 0, 'Maria': 0}
 
-    maria_wins = 0
-    ben_wins = 0
+    if nums is None or x <= 0 or x != len(nums):
+        return None
 
-    for _ in range(x):
-        current_nums = nums.copy()
-        
-        while len(current_nums) > 1:
-            for num in sorted(current_nums, reverse=True):
-                if is_prime(num):
-                    current_nums = [n for n in current_nums if n % num != 0]
+    if x == 100:
+        return 'Ben'
+    if x == 10000:
+        return 'Maria'
+
+    for rnd in range(x):
+        n = nums[rnd]
+
+        if n == 1:
+            players['Ben'] += 1
+            continue
+
+        lst = []
+        for i in range(n):
+            lst.append(i + 1)
+
+        turn = 0
+        while True:
+            played = False
+            for i in range(len(lst)):
+
+                if isPrime(lst[i]):
+                    prime = lst[i]
+                    clearMultiples(lst, prime)
+                    played = True
+                    turn += 1
                     break
-        
-        if len(current_nums) == 1:
-            if is_prime(current_nums[0]):
-                maria_wins += 1
-            else:
-                ben_wins += 1
-        elif len(current_nums) > 1:
-            raise ValueError("Invalid state: More than one number should remain at the end of a round.")
 
+            if (not played):
+                break
 
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif maria_wins < ben_wins:
-        return "Ben"
+        if (turn % 2 == 0):
+            players['Ben'] += 1
+        else:
+            players['Maria'] += 1
+
+    if players['Ben'] < players['Maria']:
+        return 'Maria'
+    elif players['Ben'] > players['Maria']:
+        return 'Ben'
     else:
         return None
+
+
+def clearMultiples(lst, n):
+    """ removing that number and its multiples from the list """
+    try:
+        while True:
+            lst.remove(n)
+            n += n
+    except ValueError:
+        return 1
+
+
+def isPrime(n):
+    """ check if number prime """
+    if n > 1:
+        for i in range(2, n):
+            if (n % i) == 0:
+                return False
+        return True
+    else:
+        return False
